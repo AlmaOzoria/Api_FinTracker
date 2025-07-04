@@ -9,10 +9,22 @@ namespace Data.Models;
 
 public class Usuario
 {
-    public int UsuarioId { get; set; }
-    public string Nombre { get; set; }
-    public string Email { get; set; }
-    public string Contraseña { get; set; }
-    public string FotoPerfil { get; set; }
-    public string Divisa { get; set; }
+  
+    [Key]
+    public int usuarioId { get; set; }
+
+    public string nombre { get; set; }
+
+    public string apellido { get; set; }
+
+    public string email { get; set; }
+
+    public string contraseña { get; set; }
+
+    public string? fotoPerfil { get; set; }
+
+    public string divisa { get; set; }
+
+
+    public double saldoTotal { get; set; }
 }

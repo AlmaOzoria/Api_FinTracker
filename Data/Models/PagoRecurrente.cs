@@ -4,17 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Models;
 
 public class PagoRecurrente
 {
-    public int PagoRecurrenteId { get; set; }
-    public decimal Monto { get; set; }
-    public string Categoria { get; set; }
-    public DateTime FechaInicio { get; set; }
-    public DateTime FechaFin { get; set; }
-    public string Frecuencia { get; set; } // Diaria, Semanal, Mensual, Anual
-    public bool Activo { get; set; } 
-    
+    [Key]
+    public int pagoRecurrenteId { get; set; }
+
+    public double monto { get; set; }
+
+    [ForeignKey("categoria")]
+    public int categoriaId { get; set; }
+
+    public Categoria categoria { get; set; }
+
+    public string frecuencia { get; set; }
+
+    public DateTime fechaInicio { get; set; }
+
+    public DateTime? fechaFin { get; set; }
+
+    public bool activo { get; set; } = true;
+
 }

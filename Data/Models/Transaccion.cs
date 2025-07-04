@@ -4,15 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Models;
 public class Transaccion
 {
-    public int TransaccionId { get; set; }
-    public Double Monto { get; set; }
-    public string Categoria { get; set; }
-    public DateTime Fecha { get; set; }
-    public string? Notas { get; set; }
-    public string Tipo { get; set; } // "Ingreso" o "Gasto"
+    [Key]
+    public int transaccionId { get; set; }
+
+    public double monto { get; set; }
+
+    [ForeignKey("categoria")]
+    public int categoriaId { get; set; }
+
+    public Categoria categoria { get; set; }
+
+    public DateTime fecha { get; set; }
+
+    public string? notas { get; set; }
+
+    public string tipo { get; set; } // "Gasto" o "Ingreso"
 
 }

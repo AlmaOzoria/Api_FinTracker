@@ -9,12 +9,19 @@ namespace Data.Models;
 
 public class MetaAhorro
 {
-    public int MetaAhorroId { get; set; }
-    public string NombreMeta { get; set; }
-    public double MontoObjetivo { get; set; }
-    public double MontoActual { get; set; }
-    public DateTime FechaFinalizacion { get; set; }
-    public string? Imagen { get; set; }
-    public string? Progreso { get; set; }
- 
+    [Key]
+    public int metaAhorroId { get; set; }
+
+    public string nombreMeta { get; set; }
+
+    public double montoObjetivo { get; set; }
+
+    public DateTime fechaFinalizacion { get; set; }
+
+    public double? contribucionRecurrente { get; set; }
+
+    public string? imagen { get; set; }
+
+    public decimal? montoActual { get; set; }
+
 }

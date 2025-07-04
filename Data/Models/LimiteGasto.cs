@@ -4,14 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Models;
 
 public class LimiteGasto
 {
- public int LimiteGastoId { get; set; }
-    public string Categoria { get; set; } 
-    public double MontoLimite { get; set; }
-    public string Periodo { get; set; } 
-    public double GastoActual { get; set; }
+ 
+    [Key]
+    public int limiteGastoId { get; set; }
+
+    [ForeignKey("categoria")]
+    public int categoriaId { get; set; }
+
+    public Categoria categoria { get; set; }
+
+    public double montoLimite { get; set; }
+
+    public string periodo { get; set; } // "Diario", "Semanal", "Mensual", "Anual"
+
+    public double? gastadoActual { get; set; }
 }

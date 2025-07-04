@@ -9,9 +9,14 @@ namespace Data.Models;
 
 public class Categoria
 {
-    public int CategoriaId { get; set; }
-    public string Nombre { get; set; }
-    public string Tipo { get; set; } 
-    public string? Icono { get; set; } 
-    public string? ColorFondo { get; set; } 
+    [Key]
+    public int categoriaId { get; set; }
+
+    public string nombre { get; set; }
+
+    public string tipo { get; set; } // "Gasto" o "Ingreso"
+
+    public string icono { get; set; }
+
+    public string colorFondo { get; set; }
 }
