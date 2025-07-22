@@ -25,14 +25,18 @@ namespace Api_FinTracker.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LimiteGasto>>> GetLimiteGasto()
         {
-            return await _context.LimiteGasto.ToListAsync();
+            return await _context.LimiteGasto
+                .Include(t => t.categoria)
+                .ToListAsync();
         }
 
         // GET: api/LimiteGastoes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<LimiteGasto>> GetLimiteGasto(int id)
         {
-            var limiteGasto = await _context.LimiteGasto.FindAsync(id);
+            var limiteGasto = await _context.LimiteGasto
+                .Include(t => t.categoria)
+                .FirstOrDefaultAsync(t => t.categoriaId == id);
 
             if (limiteGasto == null)
             {

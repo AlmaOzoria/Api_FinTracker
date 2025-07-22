@@ -82,11 +82,17 @@ namespace Api_FinTracker.Migrations
                     b.Property<DateTime>("fechaFinalizacion")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("fechaMontoAhorrado")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("imagen")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal?>("montoActual")
-                        .HasColumnType("TEXT");
+                    b.Property<double?>("montoActual")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("montoAhorrado")
+                        .HasColumnType("REAL");
 
                     b.Property<double>("montoObjetivo")
                         .HasColumnType("REAL");
@@ -138,7 +144,7 @@ namespace Api_FinTracker.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("categoriaId")
+                    b.Property<int?>("categoriaId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("fecha")
@@ -224,9 +230,7 @@ namespace Api_FinTracker.Migrations
                 {
                     b.HasOne("Data.Models.Categoria", "categoria")
                         .WithMany()
-                        .HasForeignKey("categoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("categoriaId");
 
                     b.Navigation("categoria");
                 });

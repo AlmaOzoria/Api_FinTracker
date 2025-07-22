@@ -25,14 +25,18 @@ namespace Api_FinTracker.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Transaccion>>> GetTransaccion()
         {
-            return await _context.Transaccion.ToListAsync();
+            return await _context.Transaccion
+                .Include(t => t.categoria)
+                .ToListAsync();
         }
 
         // GET: api/Transaccions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Transaccion>> GetTransaccion(int id)
         {
-            var transaccion = await _context.Transaccion.FindAsync(id);
+            var transaccion = await _context.Transaccion
+                .Include(t => t.categoria)
+                .FirstOrDefaultAsync(t => t.categoriaId == id);
 
             if (transaccion == null)
             {

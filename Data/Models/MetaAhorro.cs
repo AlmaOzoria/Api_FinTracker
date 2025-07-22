@@ -22,6 +22,9 @@ public class MetaAhorro
 
     public string? imagen { get; set; }
 
-    public decimal? montoActual { get; set; }
+    public double? montoActual { get; set; }
+
+    public double? montoAhorrado { get; set; }
+    public DateTime? fechaMontoAhorrado { get; set; }
 
 }

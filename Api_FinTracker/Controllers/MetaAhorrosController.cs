@@ -21,14 +21,14 @@ namespace Api_FinTracker.Controllers
             _context = context;
         }
 
-        // GET: api/MetaAhorroes
+        // GET: api/MetaAhorros
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MetaAhorro>>> GetMetaAhorro()
         {
             return await _context.MetaAhorro.ToListAsync();
         }
 
-        // GET: api/MetaAhorroes/5
+        // GET: api/MetaAhorros/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MetaAhorro>> GetMetaAhorro(int id)
         {
@@ -42,7 +42,7 @@ namespace Api_FinTracker.Controllers
             return metaAhorro;
         }
 
-        // PUT: api/MetaAhorroes/5
+        // PUT: api/MetaAhorros/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMetaAhorro(int id, MetaAhorro metaAhorro)
@@ -73,7 +73,7 @@ namespace Api_FinTracker.Controllers
             return NoContent();
         }
 
-        // POST: api/MetaAhorroes
+        // POST: api/MetaAhorros
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<MetaAhorro>> PostMetaAhorro(MetaAhorro metaAhorro)
@@ -84,7 +84,7 @@ namespace Api_FinTracker.Controllers
             return CreatedAtAction("GetMetaAhorro", new { id = metaAhorro.metaAhorroId }, metaAhorro);
         }
 
-        // DELETE: api/MetaAhorroes/5
+        // DELETE: api/MetaAhorros/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMetaAhorro(int id)
         {

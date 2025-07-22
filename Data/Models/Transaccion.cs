@@ -15,9 +15,9 @@ public class Transaccion
     public double monto { get; set; }
 
     [ForeignKey("categoria")]
-    public int categoriaId { get; set; }
+    public int? categoriaId { get; set; }
 
-    public Categoria categoria { get; set; }
+    public Categoria? categoria { get; set; }
 
     public DateTime fecha { get; set; }
 

@@ -17,7 +17,7 @@ public class LimiteGasto
     [ForeignKey("categoria")]
     public int categoriaId { get; set; }
 
-    public Categoria categoria { get; set; }
+    public Categoria? categoria { get; set; }
 
     public double montoLimite { get; set; }
 

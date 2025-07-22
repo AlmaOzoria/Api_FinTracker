@@ -18,7 +18,7 @@ public class PagoRecurrente
     [ForeignKey("categoria")]
     public int categoriaId { get; set; }
 
-    public Categoria categoria { get; set; }
+    public Categoria? categoria { get; set; }
 
     public string frecuencia { get; set; }
 

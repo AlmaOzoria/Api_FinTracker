@@ -38,7 +38,9 @@ namespace Api_FinTracker.Migrations
                     fechaFinalizacion = table.Column<DateTime>(type: "TEXT", nullable: false),
                     contribucionRecurrente = table.Column<double>(type: "REAL", nullable: true),
                     imagen = table.Column<string>(type: "TEXT", nullable: true),
-                    montoActual = table.Column<decimal>(type: "TEXT", nullable: true)
+                    montoActual = table.Column<double>(type: "REAL", nullable: true),
+                    montoAhorrado = table.Column<double>(type: "REAL", nullable: true),
+                    fechaMontoAhorrado = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -117,7 +119,7 @@ namespace Api_FinTracker.Migrations
                     transaccionId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     monto = table.Column<double>(type: "REAL", nullable: false),
-                    categoriaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    categoriaId = table.Column<int>(type: "INTEGER", nullable: true),
                     fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
                     notas = table.Column<string>(type: "TEXT", nullable: true),
                     tipo = table.Column<string>(type: "TEXT", nullable: false)
@@ -129,8 +131,7 @@ namespace Api_FinTracker.Migrations
                         name: "FK_Transaccion_Categoria_categoriaId",
                         column: x => x.categoriaId,
                         principalTable: "Categoria",
-                        principalColumn: "categoriaId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "categoriaId");
                 });
 
             migrationBuilder.CreateIndex(

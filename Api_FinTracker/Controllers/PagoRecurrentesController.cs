@@ -25,14 +25,18 @@ namespace Api_FinTracker.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PagoRecurrente>>> GetPagoRecurrente()
         {
-            return await _context.PagoRecurrente.ToListAsync();
+            return await _context.PagoRecurrente
+                .Include(t => t.categoria)
+                .ToListAsync();
         }
 
         // GET: api/PagoRecurrentes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PagoRecurrente>> GetPagoRecurrente(int id)
         {
-            var pagoRecurrente = await _context.PagoRecurrente.FindAsync(id);
+            var pagoRecurrente = await _context.PagoRecurrente
+                .Include(t => t.categoria)
+                .FirstOrDefaultAsync(t => t.categoriaId == id);
 
             if (pagoRecurrente == null)
             {
