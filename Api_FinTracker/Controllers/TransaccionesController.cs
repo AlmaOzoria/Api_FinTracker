@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api_FinTracker.DAL;
 using Data.Models;
@@ -21,34 +16,52 @@ namespace Api_FinTracker.Controllers
             _context = context;
         }
 
-        // GET: api/Transaccions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transaccion>>> GetTransaccion()
+        public async Task<ActionResult<IEnumerable<Transaccion>>> GetTransacciones()
         {
             return await _context.Transaccion
                 .Include(t => t.categoria)
+                .Include(t => t.usuario)
                 .ToListAsync();
         }
 
-        // GET: api/Transaccions/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Transaccion>> GetTransaccion(int id)
+        // Obtener una transacción específica por su id
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Transaccion>> GetTransaccionById(int id)
         {
             var transaccion = await _context.Transaccion
                 .Include(t => t.categoria)
-                .FirstOrDefaultAsync(t => t.categoriaId == id);
+                .Include(t => t.usuario)
+                .FirstOrDefaultAsync(t => t.transaccionId == id);
 
             if (transaccion == null)
             {
                 return NotFound();
             }
 
-            return transaccion;
+            return Ok(transaccion);
         }
 
-        // PUT: api/Transaccions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        // Obtener todas las transacciones de un usuario específico
+        [HttpGet("PorUsuario/{usuarioId:int}")]
+        public async Task<ActionResult<IEnumerable<Transaccion>>> GetTransaccionesPorUsuario(int usuarioId)
+        {
+            var transacciones = await _context.Transaccion
+                .Where(t => t.usuarioId == usuarioId)
+                .Include(t => t.categoria)
+                .Include(t => t.usuario)
+                .ToListAsync();
+
+            //if (transacciones == null || transacciones.Count == 0)
+            //{
+            //    return NotFound($"No se encontraron transacciones para el usuario con ID {usuarioId}");
+            //}
+
+            return Ok(transacciones);
+        }
+
+        // Actualizar una transacción
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> PutTransaccion(int id, Transaccion transaccion)
         {
             if (id != transaccion.transaccionId)
@@ -65,31 +78,26 @@ namespace Api_FinTracker.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!TransaccionExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
         }
 
-        // POST: api/Transaccions
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // Crear una transacción
         [HttpPost]
         public async Task<ActionResult<Transaccion>> PostTransaccion(Transaccion transaccion)
         {
             _context.Transaccion.Add(transaccion);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTransaccion", new { id = transaccion.transaccionId }, transaccion);
+            return CreatedAtAction(nameof(GetTransaccionById), new { id = transaccion.transaccionId }, transaccion);
         }
 
-        // DELETE: api/Transaccions/5
-        [HttpDelete("{id}")]
+        // Eliminar una transacción
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteTransaccion(int id)
         {
             var transaccion = await _context.Transaccion.FindAsync(id);

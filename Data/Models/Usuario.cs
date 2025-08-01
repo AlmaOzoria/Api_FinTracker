@@ -27,4 +27,10 @@ public class Usuario
 
 
     public double saldoTotal { get; set; }
+
+    public ICollection<Categoria> Categorias { get; set; } = new List<Categoria>();
+    public ICollection<LimiteGasto> LimiteGasto { get; set; } = new List<LimiteGasto>();
+    public ICollection<MetaAhorro> MetaAhorro { get; set; } = new List<MetaAhorro>();
+    public ICollection<Transaccion> Transaccion { get; set; } = new List<Transaccion>();
+    public ICollection<PagoRecurrente> PagoRecurrente { get; set; } = new List<PagoRecurrente>();
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api_FinTracker.DAL;
 using Data.Models;
@@ -21,40 +16,53 @@ namespace Api_FinTracker.Controllers
             _context = context;
         }
 
-        // GET: api/PagoRecurrentes
+        // Obtener todos los pagos recurrentes 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PagoRecurrente>>> GetPagoRecurrente()
+        public async Task<ActionResult<IEnumerable<PagoRecurrente>>> GetPagoRecurrentes()
         {
             return await _context.PagoRecurrente
-                .Include(t => t.categoria)
+                .Include(p => p.categoria)
+                .Include(p => p.usuario)
                 .ToListAsync();
         }
 
-        // GET: api/PagoRecurrentes/5
-        [HttpGet("{id}")]
+        // Obtener un pago recurrente específico por su Id
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<PagoRecurrente>> GetPagoRecurrente(int id)
         {
             var pagoRecurrente = await _context.PagoRecurrente
-                .Include(t => t.categoria)
-                .FirstOrDefaultAsync(t => t.categoriaId == id);
+                .Include(p => p.categoria)
+                .Include(p => p.usuario)
+                .FirstOrDefaultAsync(p => p.pagoRecurrenteId == id);
 
             if (pagoRecurrente == null)
-            {
                 return NotFound();
-            }
 
-            return pagoRecurrente;
+            return Ok(pagoRecurrente);
         }
 
-        // PUT: api/PagoRecurrentes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        // Nuevo endpoint: obtener todos los pagos recurrentes de un usuario específico
+        [HttpGet("PorUsuario/{usuarioId:int}")]
+        public async Task<ActionResult<IEnumerable<PagoRecurrente>>> GetPagoRecurrentesPorUsuario(int usuarioId)
+        {
+            var pagos = await _context.PagoRecurrente
+                 .Where(p => p.usuarioId == usuarioId)
+                .Include(p => p.categoria)
+                .Include(p => p.usuario)
+                .ToListAsync();
+
+            //if (pagos == null || pagos.Count == 0)
+            //    return NotFound($"No se encontraron pagos recurrentes para el usuario con ID {usuarioId}");
+
+            return Ok(pagos);
+        }
+
+        // Actualizar un pago recurrente
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> PutPagoRecurrente(int id, PagoRecurrente pagoRecurrente)
         {
             if (id != pagoRecurrente.pagoRecurrenteId)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(pagoRecurrente).State = EntityState.Modified;
 
@@ -65,38 +73,31 @@ namespace Api_FinTracker.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!PagoRecurrenteExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
         }
 
-        // POST: api/PagoRecurrentes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // Crear un nuevo pago recurrente
         [HttpPost]
         public async Task<ActionResult<PagoRecurrente>> PostPagoRecurrente(PagoRecurrente pagoRecurrente)
         {
             _context.PagoRecurrente.Add(pagoRecurrente);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPagoRecurrente", new { id = pagoRecurrente.pagoRecurrenteId }, pagoRecurrente);
+            return CreatedAtAction(nameof(GetPagoRecurrente), new { id = pagoRecurrente.pagoRecurrenteId }, pagoRecurrente);
         }
 
-        // DELETE: api/PagoRecurrentes/5
-        [HttpDelete("{id}")]
+        // Eliminar un pago recurrente
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeletePagoRecurrente(int id)
         {
             var pagoRecurrente = await _context.PagoRecurrente.FindAsync(id);
             if (pagoRecurrente == null)
-            {
                 return NotFound();
-            }
 
             _context.PagoRecurrente.Remove(pagoRecurrente);
             await _context.SaveChangesAsync();

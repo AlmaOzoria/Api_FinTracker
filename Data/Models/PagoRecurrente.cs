@@ -20,6 +20,11 @@ public class PagoRecurrente
 
     public Categoria? categoria { get; set; }
 
+    [ForeignKey("usuario")]
+    public int? usuarioId { get; set; }
+
+    public Usuario? usuario { get; set; }
+
     public string frecuencia { get; set; }
 
     public DateTime fechaInicio { get; set; }

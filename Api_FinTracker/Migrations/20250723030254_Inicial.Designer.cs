@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api_FinTracker.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20250722050825_Inicial")]
+    [Migration("20250723030254_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -42,7 +42,12 @@ namespace Api_FinTracker.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("usuarioId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("categoriaId");
+
+                    b.HasIndex("usuarioId");
 
                     b.ToTable("Categoria");
                 });
@@ -66,9 +71,14 @@ namespace Api_FinTracker.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("usuarioId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("limiteGastoId");
 
                     b.HasIndex("categoriaId");
+
+                    b.HasIndex("usuarioId");
 
                     b.ToTable("LimiteGasto");
                 });
@@ -104,7 +114,12 @@ namespace Api_FinTracker.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("usuarioId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("metaAhorroId");
+
+                    b.HasIndex("usuarioId");
 
                     b.ToTable("MetaAhorro");
                 });
@@ -134,9 +149,14 @@ namespace Api_FinTracker.Migrations
                     b.Property<double>("monto")
                         .HasColumnType("REAL");
 
+                    b.Property<int?>("usuarioId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("pagoRecurrenteId");
 
                     b.HasIndex("categoriaId");
+
+                    b.HasIndex("usuarioId");
 
                     b.ToTable("PagoRecurrente");
                 });
@@ -163,9 +183,14 @@ namespace Api_FinTracker.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("usuarioId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("transaccionId");
 
                     b.HasIndex("categoriaId");
+
+                    b.HasIndex("usuarioId");
 
                     b.ToTable("Transaccion");
                 });
@@ -207,6 +232,15 @@ namespace Api_FinTracker.Migrations
                     b.ToTable("Usuario");
                 });
 
+            modelBuilder.Entity("Data.Models.Categoria", b =>
+                {
+                    b.HasOne("Data.Models.Usuario", "usuario")
+                        .WithMany("Categorias")
+                        .HasForeignKey("usuarioId");
+
+                    b.Navigation("usuario");
+                });
+
             modelBuilder.Entity("Data.Models.LimiteGasto", b =>
                 {
                     b.HasOne("Data.Models.Categoria", "categoria")
@@ -215,7 +249,22 @@ namespace Api_FinTracker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Data.Models.Usuario", "usuario")
+                        .WithMany("LimiteGasto")
+                        .HasForeignKey("usuarioId");
+
                     b.Navigation("categoria");
+
+                    b.Navigation("usuario");
+                });
+
+            modelBuilder.Entity("Data.Models.MetaAhorro", b =>
+                {
+                    b.HasOne("Data.Models.Usuario", "usuario")
+                        .WithMany("MetaAhorro")
+                        .HasForeignKey("usuarioId");
+
+                    b.Navigation("usuario");
                 });
 
             modelBuilder.Entity("Data.Models.PagoRecurrente", b =>
@@ -226,7 +275,13 @@ namespace Api_FinTracker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Data.Models.Usuario", "usuario")
+                        .WithMany("PagoRecurrente")
+                        .HasForeignKey("usuarioId");
+
                     b.Navigation("categoria");
+
+                    b.Navigation("usuario");
                 });
 
             modelBuilder.Entity("Data.Models.Transaccion", b =>
@@ -235,7 +290,26 @@ namespace Api_FinTracker.Migrations
                         .WithMany()
                         .HasForeignKey("categoriaId");
 
+                    b.HasOne("Data.Models.Usuario", "usuario")
+                        .WithMany("Transaccion")
+                        .HasForeignKey("usuarioId");
+
                     b.Navigation("categoria");
+
+                    b.Navigation("usuario");
+                });
+
+            modelBuilder.Entity("Data.Models.Usuario", b =>
+                {
+                    b.Navigation("Categorias");
+
+                    b.Navigation("LimiteGasto");
+
+                    b.Navigation("MetaAhorro");
+
+                    b.Navigation("PagoRecurrente");
+
+                    b.Navigation("Transaccion");
                 });
 #pragma warning restore 612, 618
         }

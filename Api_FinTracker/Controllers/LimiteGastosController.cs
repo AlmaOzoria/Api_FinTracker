@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api_FinTracker.DAL;
 using Data.Models;
@@ -21,40 +16,62 @@ namespace Api_FinTracker.Controllers
             _context = context;
         }
 
-        // GET: api/LimiteGastoes
+        // Obtener todos los límites de gasto (si lo necesitas)
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LimiteGasto>>> GetLimiteGasto()
         {
             return await _context.LimiteGasto
                 .Include(t => t.categoria)
+                .Include(t => t.usuario)
                 .ToListAsync();
         }
 
-        // GET: api/LimiteGastoes/5
+        // Obtener límite de gasto por ID
         [HttpGet("{id}")]
         public async Task<ActionResult<LimiteGasto>> GetLimiteGasto(int id)
         {
             var limiteGasto = await _context.LimiteGasto
                 .Include(t => t.categoria)
-                .FirstOrDefaultAsync(t => t.categoriaId == id);
+                .Include(t => t.usuario)
+                .FirstOrDefaultAsync(t => t.limiteGastoId == id);
 
             if (limiteGasto == null)
-            {
                 return NotFound();
-            }
 
-            return limiteGasto;
+            return Ok(limiteGasto);
         }
 
-        // PUT: api/LimiteGastoes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // Obtener todos los límites de gasto de un usuario específico
+        [HttpGet("PorUsuario/{usuarioId}")]
+        public async Task<ActionResult<IEnumerable<LimiteGasto>>> GetPorUsuario(int usuarioId)
+        {
+            var limiteGasto = await _context.LimiteGasto
+                 .Where(l => l.usuarioId == usuarioId)
+                .Include(l => l.categoria) 
+                .Include(l => l.usuario)   
+                .ToListAsync();
+
+            return Ok(limiteGasto);
+        }
+
+
+        // Crear nuevo límite de gasto
+        [HttpPost]
+        public async Task<ActionResult<LimiteGasto>> PostLimiteGasto(LimiteGasto limiteGasto)
+        {
+            _context.LimiteGasto.Add(limiteGasto);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetLimiteGasto),
+                new { id = limiteGasto.limiteGastoId }, limiteGasto);
+        }
+
+        // Actualizar un límite de gasto
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLimiteGasto(int id, LimiteGasto limiteGasto)
         {
             if (id != limiteGasto.limiteGastoId)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(limiteGasto).State = EntityState.Modified;
 
@@ -65,38 +82,21 @@ namespace Api_FinTracker.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!LimiteGastoExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
         }
 
-        // POST: api/LimiteGastoes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<LimiteGasto>> PostLimiteGasto(LimiteGasto limiteGasto)
-        {
-            _context.LimiteGasto.Add(limiteGasto);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetLimiteGasto", new { id = limiteGasto.limiteGastoId }, limiteGasto);
-        }
-
-        // DELETE: api/LimiteGastoes/5
+        // Eliminar un límite de gasto
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLimiteGasto(int id)
         {
             var limiteGasto = await _context.LimiteGasto.FindAsync(id);
             if (limiteGasto == null)
-            {
                 return NotFound();
-            }
 
             _context.LimiteGasto.Remove(limiteGasto);
             await _context.SaveChangesAsync();

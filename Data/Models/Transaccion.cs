@@ -19,6 +19,11 @@ public class Transaccion
 
     public Categoria? categoria { get; set; }
 
+    [ForeignKey("usuario")]
+    public int? usuarioId { get; set; }
+
+    public Usuario? usuario { get; set; }
+
     public DateTime fecha { get; set; }
 
     public string? notas { get; set; }

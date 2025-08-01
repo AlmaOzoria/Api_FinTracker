@@ -19,6 +19,11 @@ public class LimiteGasto
 
     public Categoria? categoria { get; set; }
 
+    [ForeignKey("usuario")]
+    public int? usuarioId { get; set; }
+
+    public Usuario? usuario { get; set; }
+
     public double montoLimite { get; set; }
 
     public string periodo { get; set; } // "Diario", "Semanal", "Mensual", "Anual"

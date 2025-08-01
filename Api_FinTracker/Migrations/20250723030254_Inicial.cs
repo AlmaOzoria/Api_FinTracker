@@ -12,42 +12,6 @@ namespace Api_FinTracker.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categoria",
-                columns: table => new
-                {
-                    categoriaId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    nombre = table.Column<string>(type: "TEXT", nullable: false),
-                    tipo = table.Column<string>(type: "TEXT", nullable: false),
-                    icono = table.Column<string>(type: "TEXT", nullable: false),
-                    colorFondo = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categoria", x => x.categoriaId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MetaAhorro",
-                columns: table => new
-                {
-                    metaAhorroId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    nombreMeta = table.Column<string>(type: "TEXT", nullable: false),
-                    montoObjetivo = table.Column<double>(type: "REAL", nullable: false),
-                    fechaFinalizacion = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    contribucionRecurrente = table.Column<double>(type: "REAL", nullable: true),
-                    imagen = table.Column<string>(type: "TEXT", nullable: true),
-                    montoActual = table.Column<double>(type: "REAL", nullable: true),
-                    montoAhorrado = table.Column<double>(type: "REAL", nullable: true),
-                    fechaMontoAhorrado = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MetaAhorro", x => x.metaAhorroId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Usuario",
                 columns: table => new
                 {
@@ -67,12 +31,61 @@ namespace Api_FinTracker.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Categoria",
+                columns: table => new
+                {
+                    categoriaId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    nombre = table.Column<string>(type: "TEXT", nullable: false),
+                    tipo = table.Column<string>(type: "TEXT", nullable: false),
+                    icono = table.Column<string>(type: "TEXT", nullable: false),
+                    colorFondo = table.Column<string>(type: "TEXT", nullable: false),
+                    usuarioId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categoria", x => x.categoriaId);
+                    table.ForeignKey(
+                        name: "FK_Categoria_Usuario_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "usuarioId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MetaAhorro",
+                columns: table => new
+                {
+                    metaAhorroId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    nombreMeta = table.Column<string>(type: "TEXT", nullable: false),
+                    montoObjetivo = table.Column<double>(type: "REAL", nullable: false),
+                    fechaFinalizacion = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    contribucionRecurrente = table.Column<double>(type: "REAL", nullable: true),
+                    imagen = table.Column<string>(type: "TEXT", nullable: true),
+                    montoActual = table.Column<double>(type: "REAL", nullable: true),
+                    montoAhorrado = table.Column<double>(type: "REAL", nullable: true),
+                    fechaMontoAhorrado = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    usuarioId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MetaAhorro", x => x.metaAhorroId);
+                    table.ForeignKey(
+                        name: "FK_MetaAhorro_Usuario_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "usuarioId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LimiteGasto",
                 columns: table => new
                 {
                     limiteGastoId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     categoriaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    usuarioId = table.Column<int>(type: "INTEGER", nullable: true),
                     montoLimite = table.Column<double>(type: "REAL", nullable: false),
                     periodo = table.Column<string>(type: "TEXT", nullable: false),
                     gastadoActual = table.Column<double>(type: "REAL", nullable: true)
@@ -86,6 +99,11 @@ namespace Api_FinTracker.Migrations
                         principalTable: "Categoria",
                         principalColumn: "categoriaId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LimiteGasto_Usuario_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "usuarioId");
                 });
 
             migrationBuilder.CreateTable(
@@ -96,6 +114,7 @@ namespace Api_FinTracker.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     monto = table.Column<double>(type: "REAL", nullable: false),
                     categoriaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    usuarioId = table.Column<int>(type: "INTEGER", nullable: true),
                     frecuencia = table.Column<string>(type: "TEXT", nullable: false),
                     fechaInicio = table.Column<DateTime>(type: "TEXT", nullable: false),
                     fechaFin = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -110,6 +129,11 @@ namespace Api_FinTracker.Migrations
                         principalTable: "Categoria",
                         principalColumn: "categoriaId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PagoRecurrente_Usuario_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "usuarioId");
                 });
 
             migrationBuilder.CreateTable(
@@ -120,6 +144,7 @@ namespace Api_FinTracker.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     monto = table.Column<double>(type: "REAL", nullable: false),
                     categoriaId = table.Column<int>(type: "INTEGER", nullable: true),
+                    usuarioId = table.Column<int>(type: "INTEGER", nullable: true),
                     fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
                     notas = table.Column<string>(type: "TEXT", nullable: true),
                     tipo = table.Column<string>(type: "TEXT", nullable: false)
@@ -132,7 +157,17 @@ namespace Api_FinTracker.Migrations
                         column: x => x.categoriaId,
                         principalTable: "Categoria",
                         principalColumn: "categoriaId");
+                    table.ForeignKey(
+                        name: "FK_Transaccion_Usuario_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "usuarioId");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categoria_usuarioId",
+                table: "Categoria",
+                column: "usuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LimiteGasto_categoriaId",
@@ -140,14 +175,34 @@ namespace Api_FinTracker.Migrations
                 column: "categoriaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LimiteGasto_usuarioId",
+                table: "LimiteGasto",
+                column: "usuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MetaAhorro_usuarioId",
+                table: "MetaAhorro",
+                column: "usuarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PagoRecurrente_categoriaId",
                 table: "PagoRecurrente",
                 column: "categoriaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PagoRecurrente_usuarioId",
+                table: "PagoRecurrente",
+                column: "usuarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transaccion_categoriaId",
                 table: "Transaccion",
                 column: "categoriaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaccion_usuarioId",
+                table: "Transaccion",
+                column: "usuarioId");
         }
 
         /// <inheritdoc />
@@ -166,10 +221,10 @@ namespace Api_FinTracker.Migrations
                 name: "Transaccion");
 
             migrationBuilder.DropTable(
-                name: "Usuario");
+                name: "Categoria");
 
             migrationBuilder.DropTable(
-                name: "Categoria");
+                name: "Usuario");
         }
     }
 }
