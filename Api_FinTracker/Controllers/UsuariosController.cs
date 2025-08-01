@@ -100,6 +100,36 @@ namespace Api_FinTracker.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}/cambiarContrasena")]
+        public async Task<IActionResult> CambiarContrasena(int id, [FromBody] CambiarContrasenaRequest request)
+        {
+            var usuario = await _context.Usuario.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound("Usuario no encontrado");
+            }
+
+            // Validar que la contraseña actual coincide
+            if (usuario.contraseña != request.ContraseñaActual)
+            {
+                return BadRequest("La contraseña actual es incorrecta");
+            }
+
+            // Actualizar la contraseña
+            usuario.contraseña = request.ContraseñaNueva;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok("Contraseña cambiada exitosamente");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error al cambiar la contraseña: " + ex.Message);
+            }
+        }
+
+
         private bool UsuarioExists(int id)
         {
             return _context.Usuario.Any(e => e.usuarioId == id);
