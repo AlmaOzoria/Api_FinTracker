@@ -14,6 +14,6 @@ public class Contexto : DbContext
     public DbSet<MetaAhorro> MetaAhorro { get; set; }
     public DbSet<LimiteGasto> LimiteGasto { get; set; }
     public DbSet<Categoria> Categoria { get; set; }
-    public DbSet<CambiarContrasenaRequest> CambiarContrasenaRequest { get; set; }
+
 
 }
