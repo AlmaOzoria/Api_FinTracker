@@ -112,6 +112,39 @@ namespace Api_FinTracker.Controllers
             return NoContent();
         }
 
+        [HttpGet("totales-mensuales/{usuarioId:int}")]
+        public async Task<ActionResult<List<TotalMes>>> ObtenerTotalesPorMes(int usuarioId)
+        {
+            var totalesPorMes = await _context.Transaccion
+                .Where(t => t.usuarioId == usuarioId)
+                .GroupBy(t => t.fecha.Month)
+                .Select(g => new TotalMes
+                {
+                    Mes = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key),
+                    Total = g.Sum(t => t.monto)
+                })
+                .ToListAsync();
+
+            return Ok(totalesPorMes);
+        }
+
+        [HttpGet("totales-anuales/{usuarioId:int}")]
+        public async Task<ActionResult<List<TotalAnual>>> ObtenerTotalesPorAno(int usuarioId)
+        {
+            var totalesPorAno = await _context.Transaccion
+                .Where(t => t.usuarioId == usuarioId)
+                .GroupBy(t => t.fecha.Year)
+                .Select(g => new TotalAnual
+                {
+                    Ano = g.Key,
+                    Total = g.Sum(t => t.monto)
+                })
+                .ToListAsync();
+
+            return Ok(totalesPorAno);
+        }
+
+
         private bool TransaccionExists(int id)
         {
             return _context.Transaccion.Any(e => e.transaccionId == id);
